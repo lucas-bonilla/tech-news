@@ -1,0 +1,1954 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIGNAL — Tech News</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ── LIGHT THEME (default) ─────────────────────── */
+    :root {
+      --bg: #fbfaf8;
+      --surface: #ffffff;
+      --surface-2: #f4f2ee;
+      --surface-hover: #f8f6f2;
+      --border: #e7e3db;
+      --border-2: #d4cfc4;
+      --accent: #1a1a1a;
+      --accent-soft: rgba(26, 26, 26, 0.05);
+      --text: #1c1b19;
+      --text-muted: #8a857c;
+      --text-dim: #565249;
+      --red: #c2410c;
+      --amber: #b45309;
+      --violet: #6d28d9;
+      --green: #15803d;
+      --blue: #1d4ed8;
+      --r: 10px;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+      --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+      --topic-ai: var(--violet);
+      --topic-infra: var(--blue);
+      --topic-sec: var(--red);
+      --topic-biz: var(--amber);
+      --topic-other: var(--border-2);
+    }
+
+    /* ── DARK THEME ────────────────────────────────── */
+    [data-theme="dark"] {
+      --bg: #1a1a1a;
+      --surface: #242424;
+      --surface-2: #2d2d2d;
+      --surface-hover: #282828;
+      --border: #363636;
+      --border-2: #484848;
+      --accent: #22d3ee;
+      --accent-soft: rgba(34, 211, 238, 0.1);
+      --text: #f0f0f0;
+      --text-muted: #848484;
+      --text-dim: #b0b0b0;
+      --red: #f87171;
+      --amber: #fbbf24;
+      --violet: #a78bfa;
+      --green: #4ade80;
+      --blue: #22d3ee;
+
+      --topic-ai: var(--violet);
+      --topic-infra: var(--blue);
+      --topic-sec: var(--red);
+      --topic-biz: var(--amber);
+      --topic-other: var(--border-2);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+
+    .card-time,
+    .card-source,
+    .topic-badge,
+    .status-bar,
+    .article-count,
+    .modal-meta {
+      font-variant-numeric: tabular-nums;
+    }
+
+    #app {
+      position: relative;
+      z-index: 1;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 32px 80px;
+    }
+
+    /* ── HEADER ────────────────────────────────────── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 26px 0;
+      gap: 20px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .logo h1 {
+      font-family: var(--serif);
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .logo-mark {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .api-key-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .api-key-wrap label {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      white-space: nowrap;
+    }
+
+    .api-key-input {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-dim);
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 8px 12px;
+      width: 190px;
+      outline: none;
+      transition: border-color 0.15s, color 0.15s;
+    }
+
+    .api-key-input:focus {
+      border-color: var(--border-2);
+      color: var(--text);
+    }
+
+    .api-key-input::placeholder {
+      color: var(--text-muted);
+      opacity: 0.6;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 15px;
+      border-radius: 8px;
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-dim);
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      border-color: var(--border-2);
+      color: var(--text);
+      background: var(--surface-hover);
+    }
+
+    .btn svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    .btn-icon {
+      padding: 9px;
+    }
+
+    .btn-refresh {
+      background: var(--text);
+      border-color: var(--text);
+      color: var(--bg);
+    }
+
+    .btn-refresh:hover {
+      background: var(--text-dim);
+      border-color: var(--text-dim);
+      color: var(--bg);
+    }
+
+    /* ── HERO ──────────────────────────────────────── */
+    .hero {
+      padding: 56px 0 40px;
+      max-width: 720px;
+    }
+
+    .hero h2 {
+      font-family: var(--serif);
+      font-size: clamp(34px, 5vw, 52px);
+      font-weight: 600;
+      line-height: 1.08;
+      letter-spacing: -0.025em;
+      color: var(--text);
+    }
+
+    .hero h2 em {
+      font-style: italic;
+      color: var(--text-muted);
+    }
+
+    .hero p {
+      margin-top: 18px;
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      max-width: 560px;
+    }
+
+    /* ── STATUS ────────────────────────────────────── */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .status-dot.loading {
+      background: var(--amber);
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+
+    .status-dot.ok {
+      background: var(--green);
+    }
+
+    .status-dot.error {
+      background: var(--red);
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.35;
+      }
+    }
+
+    .status-sep {
+      color: var(--border-2);
+    }
+
+    /* ── SECTION DIVIDER ───────────────────────────── */
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 8px 0 22px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-head h3 {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    /* ── FILTER PANEL ──────────────────────────────── */
+    .filter-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 28px;
+    }
+
+    .filter-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      flex-wrap: nowrap;
+      padding: 8px 0;
+    }
+
+    .filter-row+.filter-row {
+      border-top: 1px solid var(--border);
+    }
+
+    .filter-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      min-width: 56px;
+      flex-shrink: 0;
+      padding-top: 7px;
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      transition: all 0.12s;
+      user-select: none;
+    }
+
+    .pill:hover {
+      color: var(--text);
+      background: var(--surface-hover);
+      border-color: var(--border-2);
+    }
+
+    .pill.active {
+      border-color: var(--text);
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    .pill .dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    /* Topic pill active states */
+    .pill[data-topic="ai"].active {
+      border-color: var(--violet);
+      color: #fff;
+      background: var(--violet);
+    }
+
+    .pill[data-topic="infra"].active {
+      border-color: var(--blue);
+      color: #fff;
+      background: var(--blue);
+    }
+
+    .pill[data-topic="sec"].active {
+      border-color: var(--red);
+      color: #fff;
+      background: var(--red);
+    }
+
+    .pill[data-topic="biz"].active {
+      border-color: var(--amber);
+      color: #fff;
+      background: var(--amber);
+    }
+
+    /* ── TOOLBAR ───────────────────────────────────── */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      gap: 12px;
+    }
+
+    .article-count {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+    }
+
+    .view-toggle {
+      display: flex;
+      gap: 3px;
+    }
+
+    .view-btn {
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.12s;
+      display: flex;
+      align-items: center;
+    }
+
+    .view-btn:hover {
+      color: var(--text);
+      background: var(--surface);
+      border-color: var(--border);
+    }
+
+    .view-btn.active {
+      background: var(--surface);
+      border-color: var(--border-2);
+      color: var(--text);
+    }
+
+    .view-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* ── GRID (mosaic) ─────────────────────────────── */
+    #articles-container.grid-view {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: minmax(190px, auto);
+      grid-auto-flow: dense;
+      gap: 18px;
+    }
+
+    #articles-container.list-view {
+      display: flex;
+      flex-direction: column;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 1024px) {
+      #articles-container.grid-view {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      #articles-container.grid-view {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-view .card.tile-hero,
+      .grid-view .card.tile-wide,
+      .grid-view .card.tile-tall {
+        grid-column: span 1;
+        grid-row: span 1;
+      }
+
+      .grid-view .card.tile-hero {
+        padding: 24px;
+      }
+
+      #app {
+        padding: 0 18px 60px;
+      }
+
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 18px 0;
+        gap: 14px;
+      }
+
+      .header-right {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .api-key-wrap {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .api-key-input {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .hero {
+        padding: 36px 0 28px;
+      }
+
+      .filter-pills {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 2px;
+      }
+
+      .filter-pills::-webkit-scrollbar { display: none; }
+
+      .modal-overlay {
+        align-items: flex-end;
+        padding: 0;
+      }
+
+      .modal {
+        max-width: 100%;
+        max-height: 92vh;
+        border-radius: 16px 16px 0 0;
+        border-bottom: none;
+      }
+
+      .modal-topic-stripe {
+        border-radius: 16px 16px 0 0;
+      }
+
+      .modal-header {
+        padding: 18px 20px 14px;
+      }
+
+      .modal-title {
+        font-size: 19px;
+      }
+
+      .modal-body {
+        padding: 16px 20px 32px;
+      }
+
+      .newsletter {
+        padding: 28px 22px;
+      }
+
+      .footer-cols {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* ── CARD ──────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 22px;
+      cursor: pointer;
+      transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      border-color: var(--border-2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    }
+
+    [data-theme="dark"] .card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    /* ── MOSAIC TILE SIZES ─────────────────────────── */
+    /* hero: 2 cols x 2 rows | wide: 2 cols | tall: 1 col x 2 rows | small: 1x1 */
+    .grid-view .card.tile-hero {
+      grid-column: span 2;
+      grid-row: span 2;
+      padding: 30px;
+      background: var(--surface-2);
+    }
+
+    .grid-view .card.tile-wide {
+      grid-column: span 2;
+    }
+
+    .grid-view .card.tile-tall {
+      grid-row: span 2;
+    }
+
+    .grid-view .card.tile-hero .card-title {
+      font-family: var(--serif);
+      font-size: clamp(22px, 2.4vw, 30px);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.16;
+    }
+
+    .grid-view .card.tile-wide .card-title {
+      font-size: 19px;
+    }
+
+    .grid-view .card.tile-hero .card-excerpt {
+      font-size: 15px;
+      line-height: 1.7;
+      -webkit-line-clamp: 9;
+    }
+
+    .grid-view .card.tile-tall .card-excerpt {
+      -webkit-line-clamp: 11;
+    }
+
+    /* On big tiles the AI summary can run longer too */
+    .grid-view .card.tile-hero .card-summary,
+    .grid-view .card.tile-tall .card-summary {
+      -webkit-line-clamp: 5;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Let the excerpt absorb slack so big tiles don't leave an empty gap
+       below short content; the footer stays pinned to the bottom. */
+    .grid-view .card.tile-hero .card-excerpt,
+    .grid-view .card.tile-tall .card-excerpt {
+      flex: 1 1 auto;
+    }
+
+    @media (max-width: 1024px) {
+      .grid-view .card.tile-hero {
+        grid-column: span 2;
+        grid-row: span 1;
+      }
+      .grid-view .card.tile-tall {
+        grid-row: span 1;
+      }
+    }
+
+    /* List card */
+    .list-view .card {
+      border-radius: 0;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      padding: 18px 4px;
+      flex-direction: row;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .list-view .card:hover {
+      transform: none;
+      box-shadow: none;
+      background: var(--surface-hover);
+    }
+
+    .list-view .card .card-excerpt {
+      display: none;
+    }
+
+    .list-view .card .card-summary {
+      display: none;
+    }
+
+    .list-view .card .card-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .list-view .card .list-meta {
+      min-width: 160px;
+      flex-shrink: 0;
+    }
+
+    .list-view .card .card-body {
+      flex: 1;
+    }
+
+    /* Card internals */
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .card-source-wrap {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .source-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: var(--topic-other);
+    }
+
+    .card[data-topic="ai"] .source-dot {
+      background: var(--violet);
+    }
+
+    .card[data-topic="infra"] .source-dot {
+      background: var(--blue);
+    }
+
+    .card[data-topic="sec"] .source-dot {
+      background: var(--red);
+    }
+
+    .card[data-topic="biz"] .source-dot {
+      background: var(--amber);
+    }
+
+    .card-source {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .topic-badge {
+      font-family: var(--mono);
+      font-size: 9px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 500;
+      flex-shrink: 0;
+      background: var(--surface-2);
+      color: var(--text-muted);
+    }
+
+    .card[data-topic="ai"] .topic-badge {
+      color: var(--violet);
+      background: rgba(109, 40, 217, 0.1);
+    }
+
+    .card[data-topic="infra"] .topic-badge {
+      color: var(--blue);
+      background: rgba(29, 78, 216, 0.1);
+    }
+
+    .card[data-topic="sec"] .topic-badge {
+      color: var(--red);
+      background: rgba(194, 65, 12, 0.1);
+    }
+
+    .card[data-topic="biz"] .topic-badge {
+      color: var(--amber);
+      background: rgba(180, 83, 9, 0.1);
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: -0.012em;
+      color: var(--text);
+    }
+
+    .card-excerpt {
+      display: none;
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--text-dim);
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+    }
+
+    /* Show a clamped excerpt on every grid tile */
+    .grid-view .card-excerpt {
+      display: -webkit-box;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .card-time {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-muted);
+    }
+
+    .card-arrow {
+      margin-left: auto;
+      color: var(--text-muted);
+      opacity: 0;
+      transition: opacity 0.15s, transform 0.15s;
+      font-size: 13px;
+    }
+
+    .card:hover .card-arrow {
+      opacity: 1;
+      transform: translateX(3px);
+    }
+
+    .card-summary {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-dim);
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+      margin-top: 2px;
+    }
+
+    .card-summary.loading {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-style: italic;
+      color: var(--text-muted);
+    }
+
+    .summary-spinner {
+      width: 11px;
+      height: 11px;
+      border: 1.5px solid var(--border-2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ── SKELETON ──────────────────────────────────── */
+    .skeleton-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 1024px) {
+      .skeleton-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .skeleton-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .skeleton-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .skel {
+      background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-hover) 50%, var(--surface-2) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.6s ease-in-out infinite;
+      border-radius: 4px;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    /* ── EMPTY ─────────────────────────────────────── */
+    .empty-state {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      grid-column: 1 / -1;
+      line-height: 1.8;
+    }
+
+    /* ── NEWSLETTER ────────────────────────────────── */
+    .newsletter {
+      margin-top: 56px;
+      padding: 40px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      text-align: center;
+    }
+
+    .newsletter h3 {
+      font-family: var(--serif);
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .newsletter p {
+      margin-top: 10px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .newsletter-form {
+      margin: 22px auto 0;
+      display: flex;
+      gap: 8px;
+      max-width: 420px;
+    }
+
+    .newsletter-input {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 14px;
+      padding: 11px 14px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .newsletter-input:focus {
+      border-color: var(--text);
+    }
+
+    .newsletter-form .btn {
+      padding: 11px 20px;
+    }
+
+    /* ── FOOTER ────────────────────────────────────── */
+    footer {
+      margin-top: 56px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-cols {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 32px;
+    }
+
+    .footer-brand h4 {
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .footer-brand p {
+      margin-top: 10px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      max-width: 280px;
+    }
+
+    .footer-col h5 {
+      font-family: var(--mono);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .footer-col a {
+      font-size: 13px;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.12s;
+    }
+
+    .footer-col a:hover {
+      color: var(--text);
+    }
+
+    .footer-bottom {
+      margin-top: 36px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    /* ── MODAL ─────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 18, 14, 0.4);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    [data-theme="dark"] .modal-overlay {
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .modal-overlay.open {
+      display: flex;
+      animation: fadeIn 0.15s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border-2);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 640px;
+      max-height: 88vh;
+      overflow-y: auto;
+      animation: slideUp 0.2s ease;
+      position: relative;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-topic-stripe {
+      height: 4px;
+      border-radius: 14px 14px 0 0;
+      background: var(--border-2);
+    }
+
+    .modal-topic-stripe[data-topic="ai"] {
+      background: var(--violet);
+    }
+
+    .modal-topic-stripe[data-topic="infra"] {
+      background: var(--blue);
+    }
+
+    .modal-topic-stripe[data-topic="sec"] {
+      background: var(--red);
+    }
+
+    .modal-topic-stripe[data-topic="biz"] {
+      background: var(--amber);
+    }
+
+    .modal-header {
+      padding: 24px 26px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      background: var(--surface);
+      z-index: 1;
+    }
+
+    .modal-title {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+    }
+
+    .modal-close {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 5px 9px;
+      font-family: var(--mono);
+      font-size: 10px;
+      flex-shrink: 0;
+      transition: all 0.12s;
+      letter-spacing: 0.05em;
+    }
+
+    .modal-close:hover {
+      border-color: var(--border-2);
+      color: var(--text);
+    }
+
+    .modal-body {
+      padding: 20px 26px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .modal-meta {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .modal-summary {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 18px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-dim);
+    }
+
+    .modal-summary-label {
+      font-family: var(--mono);
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .modal-summary-label::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .modal-description {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--text-dim);
+    }
+
+    .modal-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--bg);
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      border: 1px solid var(--text);
+      border-radius: 8px;
+      padding: 11px 18px;
+      transition: all 0.15s;
+      width: fit-content;
+      background: var(--text);
+    }
+
+    .modal-link:hover {
+      background: var(--text-dim);
+      border-color: var(--text-dim);
+    }
+
+    /* ── SCROLLBAR ─────────────────────────────────── */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-2);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-muted);
+    }
+
+    /* Theme toggle icon swap */
+    .icon-sun { display: none; }
+    [data-theme="dark"] .icon-sun { display: block; }
+    [data-theme="dark"] .icon-moon { display: none; }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+
+    <!-- HEADER -->
+    <header>
+      <div class="logo">
+        <h1>Signal</h1>
+        <span class="logo-mark">Tech News</span>
+      </div>
+      <div class="header-right">
+        <div class="api-key-wrap">
+          <label for="api-key-input">Claude Key</label>
+          <input type="password" id="api-key-input" class="api-key-input" placeholder="sk-ant-…" autocomplete="off">
+        </div>
+        <button class="btn btn-icon" id="theme-btn" title="Toggle theme" aria-label="Toggle theme">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+        </button>
+        <button class="btn btn-refresh" id="refresh-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10" />
+            <polyline points="1 20 1 14 7 14" />
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+          </svg>
+          Refresh
+        </button>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <h2>Technology, <em>infrastructure</em> &amp; the business behind it.</h2>
+      <p>The signal in the noise — top tech headlines from across the web, sorted, filtered, and summarized by Claude.</p>
+    </section>
+
+    <!-- STATUS -->
+    <div class="status-bar">
+      <span class="status-dot" id="status-dot"></span>
+      <span id="status-text">Initializing…</span>
+      <span class="status-sep">·</span>
+      <span id="status-sources">0 / 0 sources</span>
+      <span class="status-sep">·</span>
+      <span id="status-time">—</span>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filter-panel">
+      <div class="filter-row">
+        <span class="filter-label">Lang</span>
+        <div class="filter-pills" id="lang-filters">
+          <div class="pill" data-lang="en">EN</div>
+          <div class="pill" data-lang="es">ES</div>
+        </div>
+      </div>
+      <div class="filter-row">
+        <span class="filter-label">Topic</span>
+        <div class="filter-pills" id="topic-filters">
+          <div class="pill" data-topic="ai">AI</div>
+          <div class="pill" data-topic="infra">Infra</div>
+          <div class="pill" data-topic="sec">Security</div>
+          <div class="pill" data-topic="biz">Business</div>
+        </div>
+      </div>
+      <div class="filter-row">
+        <span class="filter-label">Source</span>
+        <div class="filter-pills" id="source-filters"></div>
+      </div>
+    </div>
+
+    <!-- SECTION HEAD -->
+    <div class="section-head">
+      <h3>Latest</h3>
+      <div class="toolbar" style="margin:0">
+        <div class="view-toggle">
+          <button class="view-btn active" id="grid-btn" title="Grid view">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7" />
+              <rect x="14" y="3" width="7" height="7" />
+              <rect x="3" y="14" width="7" height="7" />
+              <rect x="14" y="14" width="7" height="7" />
+            </svg>
+          </button>
+          <button class="view-btn" id="list-btn" title="List view">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+      <span class="article-count" id="article-count">— articles</span>
+    </div>
+
+    <!-- ARTICLES -->
+    <div id="articles-container" class="grid-view"></div>
+
+    <!-- NEWSLETTER -->
+    <section class="newsletter">
+      <h3>One useful idea a week</h3>
+      <p>The best of tech, distilled. No spam, no hype.</p>
+      <form class="newsletter-form" id="newsletter-form">
+        <input type="email" class="newsletter-input" placeholder="you@example.com" required>
+        <button type="submit" class="btn btn-refresh">Subscribe</button>
+      </form>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-cols">
+        <div class="footer-brand">
+          <h4>Signal</h4>
+          <p>Tech, infrastructure and the business behind it — aggregated from trusted sources and summarized with Claude.</p>
+        </div>
+        <div class="footer-col">
+          <h5>Topics</h5>
+          <ul>
+            <li><a href="#">AI</a></li>
+            <li><a href="#">Infrastructure</a></li>
+            <li><a href="#">Security</a></li>
+            <li><a href="#">Business</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Sources</h5>
+          <ul>
+            <li><a href="#">The Verge</a></li>
+            <li><a href="#">Ars Technica</a></li>
+            <li><a href="#">Wired</a></li>
+            <li><a href="#">Xataka</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>About</h5>
+          <ul>
+            <li><a href="#">How it works</a></li>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span id="footer-year"></span> Signal — Tech News</span>
+        <span>Summaries powered by Claude</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal" id="modal">
+      <div class="modal-topic-stripe" id="modal-stripe"></div>
+      <div class="modal-header">
+        <div class="modal-title" id="modal-title"></div>
+        <button class="modal-close" id="modal-close">ESC</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-meta" id="modal-meta"></div>
+        <div class="modal-summary" id="modal-summary" style="display:none">
+          <div class="modal-summary-label">Claude Summary</div>
+          <div id="modal-summary-text"></div>
+        </div>
+        <div class="modal-description" id="modal-description"></div>
+        <a class="modal-link" id="modal-link" href="#" target="_blank" rel="noopener noreferrer">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            <polyline points="15 3 21 3 21 9" />
+            <line x1="10" y1="14" x2="21" y2="3" />
+          </svg>
+          Read full article
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── SOURCES ──────────────────────────────────────────────────────────────────
+    const SOURCES = [
+      { id: 'verge', name: 'The Verge', lang: 'en', url: 'https://www.theverge.com/rss/index.xml' },
+      { id: 'ars', name: 'Ars Technica', lang: 'en', url: 'https://feeds.arstechnica.com/arstechnica/index' },
+      { id: 'tc', name: 'TechCrunch', lang: 'en', url: 'https://techcrunch.com/feed/' },
+      // WIRED's main /feed/rss is mostly SEO coupon/affiliate pages. Use the
+      // real editorial category feeds instead so we get actual tech news.
+      { id: 'wired-biz', name: 'WIRED Business', lang: 'en', url: 'https://www.wired.com/feed/category/business/latest/rss' },
+      { id: 'wired-sec', name: 'WIRED Security', lang: 'en', url: 'https://www.wired.com/feed/category/security/latest/rss' },
+      { id: 'mit', name: 'MIT Tech Review', lang: 'en', url: 'https://www.technologyreview.com/feed/' },
+      { id: 'techradar', name: 'TechRadar', lang: 'en', url: 'https://www.techradar.com/feeds/articletype/news' },
+      { id: 'xataka', name: 'Xataka', lang: 'es', url: 'https://www.xataka.com/feedburner.xml' },
+      { id: 'omicrono', name: 'Omicrono', lang: 'es', url: 'https://www.elespanol.com/rss/omicrono/' },
+      { id: 'computing', name: 'Computing.es', lang: 'es', url: 'https://www.computing.es/feed/' },
+      { id: 'genbeta', name: 'Genbeta', lang: 'es', url: 'https://www.genbeta.com/feedburner.xml' },
+      { id: 'muycomputer', name: 'MuyComputer', lang: 'es', url: 'https://www.muycomputer.com/feed/' },
+    ];
+
+    const PROXY = url => `/api/feed?url=${encodeURIComponent(url)}`;
+    const MAX_PER_SOURCE = 5;
+    const MAX_AI_SUMMARIES = 12;
+
+    // ── TOPIC CLASSIFICATION ─────────────────────────────────────────────────────
+    const TOPIC_RULES = {
+      ai: /\b(ai|artificial intelligence|machine learning|neural|llm|gpt|chatgpt|openai|gemini|claude|anthropic|deep learning|generative|transformer|copilot|midjourney|stable diffusion|model|robot|autonomous)\b/i,
+      infra: /\b(cloud|aws|amazon web|azure|gcp|google cloud|kubernetes|k8s|docker|container|server|data center|chip|semiconductor|hardware|cpu|gpu|arm|risc|broadband|network|5g|6g|fiber|edge computing|devops|platform)\b/i,
+      sec: /\b(security|hack|breach|vulnerability|malware|ransomware|privacy|encryption|cyber|threat|phishing|exploit|zero.day|cve|patch|password|authentication|2fa|mfa|spyware|surveillance)\b/i,
+      biz: /\b(acquisition|funding|ipo|revenue|profit|merger|startup|investment|valuation|ceo|layoff|layoffs|billion|million|deal|partnership|quarter|earnings|stock|shares|market|bankrupt|regulation|antitrust|gdpr|lawsuit)\b/i,
+    };
+
+    function classifyTopic(text) {
+      for (const [topic, rx] of Object.entries(TOPIC_RULES)) {
+        if (rx.test(text)) return topic;
+      }
+      return 'other';
+    }
+
+    // ── STATE ────────────────────────────────────────────────────────────────────
+    let allArticles = [];
+    // null = no filter for that category (i.e. "All")
+    let filters = { lang: null, topic: null, source: null };
+    let view = 'grid';
+    let loadedSources = 0;
+    let totalSources = SOURCES.length;
+
+    // ── DOM ──────────────────────────────────────────────────────────────────────
+    const container = document.getElementById('articles-container');
+    const statusDot = document.getElementById('status-dot');
+    const statusText = document.getElementById('status-text');
+    const statusSrc = document.getElementById('status-sources');
+    const statusTime = document.getElementById('status-time');
+    const countEl = document.getElementById('article-count');
+    const apiKeyInput = document.getElementById('api-key-input');
+
+    // ── UTILS ────────────────────────────────────────────────────────────────────
+    function timeAgo(date) {
+      const diff = Date.now() - date.getTime();
+      const mins = Math.floor(diff / 60000);
+      if (mins < 1) return 'just now';
+      if (mins < 60) return `${mins}m ago`;
+      const hrs = Math.floor(mins / 60);
+      if (hrs < 24) return `${hrs}h ago`;
+      const days = Math.floor(hrs / 24);
+      return `${days}d ago`;
+    }
+
+    function stripHtml(html) {
+      const div = document.createElement('div');
+      div.innerHTML = html;
+      return div.textContent || div.innerText || '';
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // ── RSS PARSE ────────────────────────────────────────────────────────────────
+    function parseRSS(xmlStr, source) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(xmlStr, 'application/xml');
+      const items = Array.from(doc.querySelectorAll('item, entry'));
+
+      return items.slice(0, MAX_PER_SOURCE).map(item => {
+        const title = item.querySelector('title')?.textContent?.trim() || 'Untitled';
+        const link = item.querySelector('link')?.textContent?.trim()
+          || item.querySelector('link')?.getAttribute('href')
+          || '#';
+        const pub = item.querySelector('pubDate, published, updated')?.textContent?.trim();
+
+        // Pull the description in priority order. We must NOT use a bare
+        // "content" selector: in namespaced feeds (e.g. WIRED) querySelector
+        // matches by local name, so "content" collides with <media:content>
+        // — an empty element that often precedes <description> in document
+        // order, yielding an empty string. Read each field explicitly instead.
+        const pick = sel => {
+          const el = item.querySelector(sel);
+          const t = el?.textContent?.trim();
+          return t || '';
+        };
+        // Atom <content> has local name "content" too, so to fetch it without
+        // also matching <media:content> we take the LAST "content" match if it
+        // carries text (Atom content is text/html; media:content is empty).
+        const atomContent = () => {
+          const els = item.querySelectorAll('content');
+          for (const el of els) {
+            const t = el.textContent?.trim();
+            if (t) return t;
+          }
+          return '';
+        };
+        const desc =
+          pick('description') ||
+          pick('encoded') ||   // content:encoded (RSS)
+          pick('summary') ||   // Atom
+          atomContent() ||     // Atom <content>, skipping empty <media:content>
+          '';
+        const date = pub ? new Date(pub) : new Date();
+
+        const fullText = `${title} ${stripHtml(desc)}`;
+        const topic = classifyTopic(fullText);
+
+        return {
+          id: `${source.id}-${link}`,
+          title,
+          link,
+          date: isNaN(date) ? new Date() : date,
+          description: stripHtml(desc).slice(0, 600),
+          source,
+          topic,
+          summary: null,
+          summaryLoading: false,
+        };
+      });
+    }
+
+    // ── FETCH ────────────────────────────────────────────────────────────────────
+    async function fetchSource(source) {
+      try {
+        const res = await fetch(PROXY(source.url), { signal: AbortSignal.timeout(12000) });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const text = await res.text();
+        return parseRSS(text, source);
+      } catch (e) {
+        console.warn(`[${source.id}] fetch failed:`, e.message);
+        return [];
+      }
+    }
+
+    async function loadFeeds() {
+      loadedSources = 0;
+      allArticles = [];
+      setStatus('loading', 'Fetching feeds…');
+      container.innerHTML = buildSkeletons(12);
+
+      const promises = SOURCES.map(async source => {
+        const articles = await fetchSource(source);
+        loadedSources++;
+        allArticles.push(...articles);
+        statusSrc.textContent = `${loadedSources} / ${totalSources} sources`;
+        if (loadedSources % 3 === 0 || loadedSources === totalSources) render();
+      });
+
+      await Promise.allSettled(promises);
+
+      allArticles.sort((a, b) => b.date - a.date);
+
+      const now = new Date();
+      statusTime.textContent = `Updated ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      setStatus('ok', `${allArticles.length} articles loaded`);
+      render();
+      rebuildSourceFilter();
+      triggerAISummaries();
+    }
+
+    // ── RENDER ───────────────────────────────────────────────────────────────────
+    function filtered() {
+      return allArticles.filter(a => {
+        if (filters.lang && a.source.lang !== filters.lang) return false;
+        if (filters.topic && a.topic !== filters.topic) return false;
+        if (filters.source && a.source.id !== filters.source) return false;
+        return true;
+      });
+    }
+
+    function render() {
+      const articles = filtered();
+      countEl.textContent = `${articles.length} article${articles.length !== 1 ? 's' : ''}`;
+
+      if (articles.length === 0) {
+        container.innerHTML = `<div class="empty-state">No articles match the current filters.</div>`;
+        return;
+      }
+
+      container.innerHTML = articles.map((a, i) => buildCard(a, view === 'grid' ? tileSize(i) : '')).join('');
+
+      container.querySelectorAll('.card').forEach(card => {
+        const id = card.dataset.id;
+        card.addEventListener('click', () => openModal(id));
+      });
+    }
+
+    // Repeating mosaic rhythm on a 4-col grid: one big hero leads each block,
+    // followed by a mix of wide / tall / small tiles for an editorial feel.
+    const TILE_PATTERN = [
+      'tile-hero',  // 2x2
+      'tile-small',
+      'tile-small',
+      'tile-wide',  // 2x1
+      'tile-tall',  // 1x2
+      'tile-small',
+      'tile-small',
+      'tile-small',
+      'tile-wide',
+      'tile-small',
+    ];
+
+    function tileSize(i) {
+      return TILE_PATTERN[i % TILE_PATTERN.length];
+    }
+
+    function buildCard(a, tile = '') {
+      const topicBadge = a.topic !== 'other'
+        ? `<span class="topic-badge">${a.topic.toUpperCase()}</span>`
+        : '';
+
+      // Big tiles get the full available excerpt; CSS line-clamp trims to fit.
+      const isBig = tile === 'tile-hero' || tile === 'tile-tall';
+      let excerptText = a.description
+        ? escapeHtml(isBig ? a.description : a.description.slice(0, 180) + '…')
+        : '';
+      // Keep big tiles from looking empty when a feed gives no description.
+      if (isBig && !excerptText) excerptText = 'Open to read the full story →';
+      const excerpt = excerptText ? `<div class="card-excerpt">${excerptText}</div>` : '';
+
+      let summaryHtml = '';
+      if (a.summary) {
+        summaryHtml = `<div class="card-summary">${escapeHtml(a.summary)}</div>`;
+      } else if (a.summaryLoading) {
+        summaryHtml = `<div class="card-summary loading"><div class="summary-spinner"></div>Generating summary…</div>`;
+      }
+
+      return `
+    <div class="card${tile ? ' ' + tile : ''}" data-id="${escapeHtml(a.id)}" data-topic="${escapeHtml(a.topic)}">
+      <div class="card-header">
+        <div class="card-source-wrap">
+          <span class="source-dot"></span>
+          <span class="card-source">${escapeHtml(a.source.name)}</span>
+        </div>
+        ${topicBadge}
+      </div>
+      <div class="card-title">${escapeHtml(a.title)}</div>
+      ${excerpt}
+      <div class="card-footer">
+        <span class="card-time">${timeAgo(a.date)}</span>
+        <span class="card-arrow">→</span>
+      </div>
+      ${summaryHtml}
+    </div>`;
+    }
+
+    function buildSkeletons(n) {
+      const card = `
+    <div class="skeleton-card">
+      <div class="skel" style="width:40%;height:8px"></div>
+      <div class="skel" style="width:100%;height:15px;margin-top:6px"></div>
+      <div class="skel" style="width:80%;height:15px"></div>
+      <div class="skel" style="width:25%;height:8px;margin-top:6px"></div>
+    </div>`;
+      return `<div class="skeleton-grid">${card.repeat(n)}</div>`;
+    }
+
+    // ── STATUS ───────────────────────────────────────────────────────────────────
+    function setStatus(state, msg) {
+      statusDot.className = `status-dot ${state}`;
+      statusText.textContent = msg;
+    }
+
+    // ── SOURCE FILTER ────────────────────────────────────────────────────────────
+    function rebuildSourceFilter() {
+      const wrap = document.getElementById('source-filters');
+      const sources = [...new Map(allArticles.map(a => [a.source.id, a.source])).values()];
+      wrap.innerHTML = '';
+      sources.forEach(s => {
+        const p = document.createElement('div');
+        p.className = 'pill';
+        p.dataset.source = s.id;
+        p.textContent = s.name;
+        if (filters.source === s.id) p.classList.add('active');
+        wrap.appendChild(p);
+      });
+    }
+
+    // ── FILTERS ──────────────────────────────────────────────────────────────────
+    // Toggle model: no pill active = All. Clicking a pill selects it (and
+    // deselects siblings); clicking the active pill again clears it back to All.
+    function setFilter(type, value, wrap) {
+      filters[type] = filters[type] === value ? null : value;
+      wrap.querySelectorAll('.pill').forEach(p => {
+        p.classList.toggle('active', p.dataset[type] === filters[type]);
+      });
+      render();
+    }
+
+    document.getElementById('lang-filters').addEventListener('click', e => {
+      const pill = e.target.closest('.pill');
+      if (!pill) return;
+      setFilter('lang', pill.dataset.lang, e.currentTarget);
+    });
+
+    document.getElementById('topic-filters').addEventListener('click', e => {
+      const pill = e.target.closest('.pill');
+      if (!pill) return;
+      setFilter('topic', pill.dataset.topic, e.currentTarget);
+    });
+
+    document.getElementById('source-filters').addEventListener('click', e => {
+      const pill = e.target.closest('.pill');
+      if (!pill) return;
+      setFilter('source', pill.dataset.source, e.currentTarget);
+    });
+
+    // ── VIEW TOGGLE ──────────────────────────────────────────────────────────────
+    document.getElementById('grid-btn').addEventListener('click', () => {
+      view = 'grid';
+      container.className = 'grid-view';
+      document.getElementById('grid-btn').classList.add('active');
+      document.getElementById('list-btn').classList.remove('active');
+      render();
+    });
+
+    document.getElementById('list-btn').addEventListener('click', () => {
+      view = 'list';
+      container.className = 'list-view';
+      document.getElementById('list-btn').classList.add('active');
+      document.getElementById('grid-btn').classList.remove('active');
+      render();
+    });
+
+    // ── REFRESH ──────────────────────────────────────────────────────────────────
+    document.getElementById('refresh-btn').addEventListener('click', () => loadFeeds());
+
+    // ── THEME TOGGLE ─────────────────────────────────────────────────────────────
+    const root = document.documentElement;
+    const savedTheme = localStorage.getItem('signal_theme') || 'light';
+    root.setAttribute('data-theme', savedTheme);
+    document.getElementById('theme-btn').addEventListener('click', () => {
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('signal_theme', next);
+    });
+
+    // ── NEWSLETTER (placeholder) ─────────────────────────────────────────────────
+    document.getElementById('newsletter-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const input = e.target.querySelector('input');
+      const btn = e.target.querySelector('button');
+      btn.textContent = 'Subscribed ✓';
+      btn.disabled = true;
+      input.disabled = true;
+    });
+
+    // ── FOOTER YEAR ──────────────────────────────────────────────────────────────
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+    // ── API KEY ──────────────────────────────────────────────────────────────────
+    apiKeyInput.value = localStorage.getItem('claude_api_key') || '';
+    apiKeyInput.addEventListener('change', () => {
+      localStorage.setItem('claude_api_key', apiKeyInput.value.trim());
+    });
+
+    // ── AI SUMMARIES ─────────────────────────────────────────────────────────────
+    async function triggerAISummaries() {
+      const key = apiKeyInput.value.trim() || localStorage.getItem('claude_api_key');
+      if (!key) return;
+
+      const targets = filtered().slice(0, MAX_AI_SUMMARIES);
+
+      for (const article of targets) {
+        if (article.summary) continue;
+        article.summaryLoading = true;
+        render();
+
+        try {
+          const lang = article.source.lang === 'es' ? 'Spanish' : 'English';
+          const prompt = `Summarize this tech news article in ONE short sentence (max 22 words) in ${lang}. Capture the key takeaway only. Be direct. Do not start with "This article" or "The article".
+
+Title: ${article.title}
+Content: ${article.description}`;
+
+          const res = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-api-key': key,
+              'anthropic-version': '2023-06-01',
+              'anthropic-dangerous-direct-browser-calls': 'true',
+            },
+            body: JSON.stringify({
+              model: 'claude-haiku-4-5-20251001',
+              max_tokens: 80,
+              messages: [{ role: 'user', content: prompt }],
+            }),
+          });
+
+          if (!res.ok) throw new Error(`Anthropic API ${res.status}`);
+          const data = await res.json();
+          article.summary = data.content?.[0]?.text?.trim() || '';
+        } catch (e) {
+          console.warn('Summary failed:', e.message);
+          article.summary = null;
+        }
+
+        article.summaryLoading = false;
+        render();
+      }
+    }
+
+    // ── MODAL ────────────────────────────────────────────────────────────────────
+    function openModal(id) {
+      const article = allArticles.find(a => a.id === id);
+      if (!article) return;
+
+      document.getElementById('modal-stripe').dataset.topic = article.topic;
+      document.getElementById('modal-title').textContent = article.title;
+
+      document.getElementById('modal-meta').innerHTML = `
+    <span>${escapeHtml(article.source.name)}</span>
+    <span>·</span>
+    <span>${article.date.toLocaleDateString(article.source.lang === 'es' ? 'es-ES' : 'en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+    <span>·</span>
+    <span>${timeAgo(article.date)}</span>
+    ${article.topic !== 'other' ? `<span>·</span><span>${article.topic.toUpperCase()}</span>` : ''}
+  `;
+
+      const summaryEl = document.getElementById('modal-summary');
+      const summaryText = document.getElementById('modal-summary-text');
+      if (article.summary) {
+        summaryText.textContent = article.summary;
+        summaryEl.style.display = 'block';
+      } else {
+        summaryEl.style.display = 'none';
+      }
+
+      document.getElementById('modal-description').textContent = article.description || 'No preview available.';
+      document.getElementById('modal-link').href = article.link;
+
+      document.getElementById('modal-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('modal-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('modal-close').addEventListener('click', closeModal);
+    document.getElementById('modal-overlay').addEventListener('click', e => {
+      if (e.target === e.currentTarget) closeModal();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // ── INIT ─────────────────────────────────────────────────────────────────────
+    loadFeeds();
+  </script>
+</body>
+
+</html>
